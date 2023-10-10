@@ -15,13 +15,15 @@ typedef struct Guardian
     struct Guardian *next;
 }Guardian;
 
-void imprimir(Guardian *deck)
+void printCards(Guardian *deck)
 {
-    printf("\nMazo:\n");
+    int i = 1;
+    printf("\nDeck:\n");
     while (deck != NULL)
     {
-        printf("%s %s %d %d %d\n", deck->name, deck->type, deck->HP, deck->ATK, deck->DEF);
+        printf("%d.- %s %s %d %d %d\n", i, deck->name, deck->type, deck->HP, deck->ATK, deck->DEF);
         deck = deck->next;
+        i++;
     }
 }
 
@@ -42,18 +44,20 @@ void addStruct(Guardian **head, Guardian *newguardian)
     }
 }
 
-void readFile(Guardian **deck)
+void readFile(Guardian **deck, int *HpMax, int *HpMin, int *ATKMax, int *ATKMin, int *DEFMax, int *DEFMin)
 {
+    int i = 0;
     FILE *file = fopen("guardianes.txt", "r");
     if (file == NULL)
     {
         return;
     }
 
-    char line[MAX_LINE_LENGTH]; //MAX_LINE_LENGTH es un valor global que definen ustedes
+    char line[MAX_LINE_LENGTH];
 
     while(fgets(line, MAX_LINE_LENGTH, file))
     {
+
         Guardian *newstruct = (Guardian*)malloc(sizeof(Guardian));
 
         char *text = strtok(line, ",");
@@ -62,19 +66,48 @@ void readFile(Guardian **deck)
         char *text2 = strtok(NULL, ",");
         strcpy(newstruct->type, text2);
 
-        newstruct->HP = atoi(strtok(NULL, ",")); //atof para valores decimales
+        newstruct->HP = atoi(strtok(NULL, ","));
         newstruct->ATK = atoi(strtok(NULL, ","));
         newstruct->DEF = atoi(strtok(NULL, ","));
 
+        if(i == 0)
+        {
+            *HpMin = newstruct->HP;
+            *ATKMin = newstruct->ATK;
+            *DEFMin = newstruct->DEF;
+        }
+
+        if(newstruct->HP >= *HpMax)
+        {
+            *HpMax = newstruct->HP;
+        }
+        if(newstruct->HP <= *HpMin)
+        {
+            *HpMin = newstruct->HP;
+        }
+        if(newstruct->ATK >= *ATKMax)
+        {
+            *ATKMax = newstruct->ATK;
+        }
+        if(newstruct->ATK <= *ATKMin)
+        {
+            *ATKMin = newstruct->ATK;
+        }
+        if(newstruct->DEF >= *DEFMax)
+        {
+            *DEFMax = newstruct->DEF;
+        }
+        if(newstruct->DEF <= *DEFMin)
+        {
+            *DEFMin = newstruct->DEF;
+        }
+
         newstruct->next = NULL;
 
-        // Se añade el Struct creado a la lista existente.
         addStruct(deck, newstruct);
-        //printf("%s %s %d %d %d\n", newstruct->name, newstruct->type, newstruct->HP, newstruct->ATK, newstruct->DEF);
+        i++;
     }
     fclose(file);
-
-
 }
 void freeGuardians(Guardian *head)
 {
@@ -93,15 +126,23 @@ int main()
 {
     Guardian *deck = NULL;
 
-    int eleccion;
+    int choice;
+    int HpMax=0;
+    int HpMin=0;
+    int ATKMax=0;
+    int ATKMin=0;
+    int DEFMax=0;
+    int DEFMin=0;
 
-    readFile(&deck);
+    readFile(&deck,&HpMax,&HpMin,&ATKMax,&ATKMin,&DEFMax,&DEFMin);
 
-	while(eleccion != 4)
+    //printf("%d %d %d %d %d %d\n",HpMax,HpMin,ATKMax,ATKMin,DEFMax,DEFMin); // Impresion de los maximos y minimos de vida, ataque y defensa desde el archivo de texto
+
+	while(choice != 5)
     {
-		printf("\n--BIENVENIDO--\n1.- Jugar\n2.- Crear Carta\n3.- Imprimir Mazo\n4.- Salir\n");
-		scanf("%d", &eleccion);
-		switch(eleccion)
+		printf("\n--Clash of the Guardians--\n1.- Play\n2.- Create new card\n3.- History\n4.- Quit\n");
+		scanf("%d", &choice);
+		switch(choice)
 		{
 			case 1:
 				printf("En proceso...\n");
@@ -110,7 +151,10 @@ int main()
 				printf("En proceso...\n");
 			break;
 			case 3:
-				imprimir(deck);
+				printf("En proceso...\n");
+			break;
+			case 20:
+				printCards(deck);
 			break;
 		}
 	}
