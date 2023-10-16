@@ -1,0 +1,14 @@
+
+					//  INSTALL  //
+
+1. Este programa fue creado con la IDE Code Blocks.
+
+2. Para poder ejecutar de buena manera el programa, se debe tener el archivo con los guardianes junto
+al programa, es decir, en la misma carpeta.
+
+3. El archivo usado donde se encuentra la información a usar debe ser llamado "guardianes.txt".
+
+4. La informacion dentro del archivo debe ser distribuida de la siguiente manera:
+NOMBRE,TIPO,VIDA,ATAQUE,DEFENSA. Sin espacios entre cada coma.
+5. Dentro de Code Blocks, se debe presionar el botón build and run para poder compilar y ejecutar
+el programa.
